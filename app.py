@@ -50,6 +50,36 @@ def doar():
 
     return jsonify({'mensagem': 'Livro cadastrado com sucesso'}), 201
 # Aqui verificamos se o script está sendo executado diretamente e não importado como módulo
+
+@app.route("/livros", methods=["GET"])
+def listar_livros():
+
+    with sqlite3.connect("database.db") as conn:
+        livros = conn.execute("SELECT * FROM LIVROS").fetchall()
+
+
+        livros_formatados = []
+
+
+        for item in livros:
+            dicionario_livros = {
+                "id":item[0],
+                "titulo":item[1],
+                "categoria":item[2],
+                "autor":item[3],
+                "image_url":item[4]
+
+            }
+
+            livros_formatados.append(dicionario_livros)
+
+        return jsonify(livros_formatados)
+
+
+
+
+
+
 if __name__ == "__main__":
     # Inicia o servidor Flask no modo de depuração (nesse modo nossa API responde automaticamente a qualquer atualização que fizermos no código)
     app.run(debug=True)
